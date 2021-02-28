@@ -1,17 +1,15 @@
-board = [[4, 2, 7],
-         [1, 6, 3],
-         [0, 8, 5]]
+BOARD = [[1, 8, 2],
+         [0, 4, 3],
+         [7, 6, 5]]
 
 FINAL_BOARD = [[1, 2, 3],
                [4, 5, 6],
                [7, 8, 0]]
 
-# START_FB = (0, 2)
-# START_BF = (2, 2)
-
 open_space = (0, 2)
 
 
+# Find the open space in the puzzle
 def find_open_space(n):
     global open_space
     for i in range(len(n)):
@@ -21,6 +19,7 @@ def find_open_space(n):
                 break
 
 
+# Look for possible next steps
 def neighbors(n):
     res = []
     x = open_space[0]
@@ -37,15 +36,16 @@ def neighbors(n):
     return res
 
 
-def bs(states):
-    # NOT_VISITED, VISITED = 0, 1
+def bs(board, final_board):
     visited_fb = []
     visited_bf = []
-    visited_fb = []
+
     actions_fb = [0 for _ in range(181440)]
     actions_bf = [0 for _ in range(181440)]
+
     queue_fb = [board]  # Add the initial cell into the queue
-    queue_bf = [FINAL_BOARD]  # Add the initial cell into the queue
+    queue_bf = [final_board]  # Add the initial cell into the queue
+    memory_nodes = []
 
     while queue_fb and queue_bf:
         if queue_fb:
@@ -54,16 +54,20 @@ def bs(states):
             for node in neighbors(n):
                 if node not in visited_fb:
                     print(node)
+                    # Add to visited and count depth
                     visited_fb.append(node)
                     if(n not in visited_fb):
                         visited_fb.append(n)
                     actions_fb[visited_fb.index(
                         node)] = actions_fb[visited_fb.index(n)] + 1
                     queue_fb.append(node)
-                    if node == FINAL_BOARD:
+                    memory_nodes.append(node)
+                    if node == final_board:
                         print("Done via fb")
                         print(node)
                         print(actions_fb[visited_fb.index(node)])
+                        memory_nodes.clear()
+                        queue_bf.clear()
                         queue_fb.clear()
                         break
         # Back to front
@@ -73,33 +77,31 @@ def bs(states):
             for node in neighbors(n):
                 if node not in visited_bf:
                     print(node)
+                    # Add to visited and count depth
                     visited_bf.append(node)
                     if(n not in visited_bf):
                         visited_bf.append(n)
                     actions_bf[visited_bf.index(
                         node)] = actions_bf[visited_bf.index(n)] + 1
                     queue_bf.append(node)
-                    if node == FINAL_BOARD:
+                    # Check if middle has been found
+                    if node in memory_nodes:
+                        print("Done found middle")
+                        print(node)
+                        print(actions_bf[visited_bf.index(node)])
+                        memory_nodes.clear()
+                        queue_bf.clear()
+                        queue_fb.clear()
+                        break
+                    memory_nodes.clear()
+                    if node == board:
                         print("Done via bf")
                         print(node)
                         print(actions_bf[visited_bf.index(node)])
+                        memory_nodes.clear()
                         queue_bf.clear()
+                        queue_fb.clear()
                         break
-        # n = queue.pop(0)
-        # print("\tVisiting ", n)
-        # # visited[n] = VISITED
-        # for node in neighbors(n, states):
-        #     if visited[node[0]][node[1]] == NOT_VISITED:
-        #         visited[node[0]][node[1]] = VISITED
-        #         actions_fb += 1  # Count the number of actions_fb
-        #         queue.append(node)
-        #         if board == FINAL_BOARD:
-        #             # I'm done!
-        #             # Display the number of actions_fb
-        #             print(actions_fb)
-        #             print("Minimum number of actions_fb ", actions_fb)
-        #             # Finish BFS
-        #             queue.clear()
 
 
-bs(board)
+bs(BOARD, FINAL_BOARD)
