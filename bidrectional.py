@@ -1,6 +1,6 @@
-BOARD = [[1, 8, 2],
-         [0, 4, 3],
-         [7, 6, 5]]
+BOARD = [[2, 8, 1],
+         [4, 7, 3],
+         [0, 6, 5]]
 
 FINAL_BOARD = [[1, 2, 3],
                [4, 5, 6],
@@ -45,7 +45,6 @@ def bs(board, final_board):
 
     queue_fb = [board]  # Add the initial cell into the queue
     queue_bf = [final_board]  # Add the initial cell into the queue
-    memory_nodes = []
 
     while queue_fb and queue_bf:
         if queue_fb:
@@ -61,12 +60,10 @@ def bs(board, final_board):
                     actions_fb[visited_fb.index(
                         node)] = actions_fb[visited_fb.index(n)] + 1
                     queue_fb.append(node)
-                    memory_nodes.append(node)
                     if node == final_board:
                         print("Done via fb")
                         print(node)
                         print(actions_fb[visited_fb.index(node)])
-                        memory_nodes.clear()
                         queue_bf.clear()
                         queue_fb.clear()
                         break
@@ -85,20 +82,20 @@ def bs(board, final_board):
                         node)] = actions_bf[visited_bf.index(n)] + 1
                     queue_bf.append(node)
                     # Check if middle has been found
-                    if node in memory_nodes:
+                    if node in visited_fb:
                         print("Done found middle")
                         print(node)
+                        print(actions_fb[visited_fb.index(node)])
                         print(actions_bf[visited_bf.index(node)])
-                        memory_nodes.clear()
+                        print(
+                            f"Number of steps: {actions_fb[visited_fb.index(node)]+actions_bf[visited_bf.index(node)]}")
                         queue_bf.clear()
                         queue_fb.clear()
                         break
-                    memory_nodes.clear()
                     if node == board:
                         print("Done via bf")
                         print(node)
                         print(actions_bf[visited_bf.index(node)])
-                        memory_nodes.clear()
                         queue_bf.clear()
                         queue_fb.clear()
                         break
