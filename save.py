@@ -1,33 +1,40 @@
-#Start and finish
-# BOARD = [[1, 8, 2],
-#          [0, 4, 3],
-#          [7, 6, 5]]
-# Teacher
-BOARD = [[4, 2, 7],
-         [1, 6, 3],
-         [7, 8, 0]]
+# def ids(board, final_board, limit):
+#     visited = []
+#     stack = [board]
+#     count = 0
+#     while stack:
+#         n = stack.pop()
+#         if n not in visited:
+#             find_open_space(n)
+#             visited.append(n)
+#             print(n)
+#             print(count)
+#             for node in neighbors(n):
+#                 stack.append(node)
+#                 if node == final_board:
+#                     stack.clear()
+#                     print("Done")
+#                     print(node)
+#                     break
+
+
+# WORKS with vISITED CHECK ON n
+BOARD = [[1, 8, 2],
+         [0, 4, 3],
+         [7, 6, 5]]
+
 FINAL_BOARD = [[1, 2, 3],
                [4, 5, 6],
                [7, 8, 0]]
 
-limit = 20
+limit = 9
 open_space = (0, 2)
 visited = []
 children = []
 parent = [0 for _ in range(181440)]
 depth = 0
+count = 0
 # Find the open space in the puzzle
-
-
-def extract_path():
-    p = FINAL_BOARD
-    path = []
-    path.append(p)
-    while p != BOARD:
-        p = parent[visited.index(p)]
-        path.append(p)
-    path.reverse()
-    return path
 
 
 def find_open_space(n):
@@ -56,42 +63,43 @@ def neighbors(n):
 
 
 def IDS(board, final_board, limit):
-    found = False
     stack = [board]
-    for i in range(0, limit):
+    for i in range(limit):
         if ids(stack, final_board, i):
-            print(f"Found on limit {depth}")
-            print("Path: ")
-            print(extract_path())
-            found = True
+            print("DONE")
+            print(count)
             break
-    if not found:
-        print(f"Not found within depth limit {limit}")
 
 
+# PROBLEM=> How to check each node on level before going to nex level
 def ids(stack, final_board, limit):
-    global visited, depth, children
+    global visited, depth, children, count
     limit += 1
     while stack:
         if depth <= limit:
             n = stack.pop()
             if n == final_board:
                 stack.clear()
+                print("Done")
+                print(n)
                 return True
             else:
-                find_open_space(n)
-                visited.append(n)
-                for node in neighbors(n):
-                    if node not in visited:
-                        visited.append(node)
+                if n not in visited:
+                    find_open_space(n)
+                    visited.append(n)
+                    print(n)
+                    print(depth)
+                    for node in neighbors(n):
                         children.append(node)
-                        parent[visited.index(node)] = n
                 if len(stack) == 0:
                     depth += 1
                     for stack_tem in children:
                         stack.append(stack_tem)
                     children.clear()
+            count += 1
         else:
+            count += 1
+            print("Not found within depth limit")
             return False
 
 
