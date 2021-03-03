@@ -13,7 +13,7 @@ open_space = (0, 2)
 
 print("START_BOARD:", BOARD)
 print("FINAL_BOARD:", FINAL_BOARD)
-
+print('Searching...')
 path = []
 # Check the path
 

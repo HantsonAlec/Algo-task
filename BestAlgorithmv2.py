@@ -171,6 +171,7 @@ def best_first_search(root):
 
 print("START_BOARD:", START_BOARD)
 print("START_BOARD:", FINAL_BOARD)
+print('Searching...')
 best_first_search(START_BOARD)
 print("Best- First- Surch solution / Depth of solution:",
       len(path)-1)  # -1 because algo starts on depth 0
