@@ -1,15 +1,28 @@
-"""
-Best First Surch Algorithm
-
-"""
+# Best First Surch Algorithm
 
 import copy
 import operator
-
+# START_BOARD = [[4, 3, 0],  # Alternative
+#                [7, 1, 2],
+#                [8, 6, 5]]
 START_BOARD = [[1, 8, 2], [0, 4, 3], [7, 6, 5]]
-# START_BOARD = [[4 ,2 ,7] ,[1 ,6 ,3] ,[0 ,8 ,5 ]] #teachers puzzle: Takes too long
 FINAL_BOARD = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 childs = []
+parent = [0 for _ in range(181440)]
+path = []
+
+# Check the path
+
+
+def extract_path(visited):
+    p = FINAL_BOARD
+    path = []
+    path.append(p)
+    while p != START_BOARD:
+        p = parent[visited.index(p)]
+        path.append(p)
+    path.reverse()
+    return path
 
 
 def displace(puzzle_box, FINAL_BOARD):  # find distance from acutal puzzel to final board
@@ -120,45 +133,46 @@ def remove_from_Startboard(x, Startboard2):
 
 
 def best_first_search(root):
-
+    global path
     root_Puzzle = displace(root, FINAL_BOARD)+1  # Amount of displased cells
     Startboard2 = [[root_Puzzle, root]]  # discplaced cells and Start_board
+    visited = []
     close = []
-    step = 2
+    step = 0
     keylist = []
     k = root_Puzzle
     v = 1
     while Startboard2:
         x = set_x(Startboard2)  # detect minimum
+
         remove_from_Startboard(x, Startboard2)
         for k in x:
-            print("\n ************************* actuall No. of steps:", step)
-            # print selected puzzle and the distance
-            print("Selected Child: ", k[1],
-                  "because of minimum Distance:", k[0])
-            # if distance to finalboard is 0 than print and return number of steps
+            # if distance to finalboard is 0 extract path
             if displace(k[1], FINAL_BOARD) == 0:
-                print('Success')
+                path = extract_path(visited)
                 return step
             else:  # if not generate children
                 s1, s2 = findzero(k[1])
                 childs = genrate_childs(k[1], s1, s2)  # create children
 
-                print("New Children")
-
-                for i in childs:  # for all children find distance to starboard, print them and append them to starboardlist
-                    print(i)
+                for i in childs:  # for all children find distance to starboard, append them to starboardlist
                     # calculate distance from children to finalboard
                     value = displace(i, FINAL_BOARD) + step
                     # add this combination to startbord2
                     Startboard2.append([value, i])
+                    if i not in visited:
+                        visited.append(i)
+                        parent[visited.index(i)] = k[1]
                 close.append(k[1])
         Startboard2.sort(key=lambda x: x[0])  # Sort Children in startboardlist
-        print("Distance, Child - List:", Startboard2, "\n")
-        step = step+1  # add step
+        step = step + 1  # add step
     return 0
 
 
 print("START_BOARD:", START_BOARD)
-print("Best- First- Surch solution / Number of steps:",
-      best_first_search(START_BOARD))
+print("START_BOARD:", FINAL_BOARD)
+best_first_search(START_BOARD)
+print("Best- First- Surch solution / Depth of solution:",
+      len(path)-1)  # -1 because algo starts on depth 0
+print("Path: ")
+print(*path, sep='\n')

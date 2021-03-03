@@ -1,11 +1,11 @@
+# IDS Algorithm
 #Start and finish
-# BOARD = [[1, 8, 2],
-#          [0, 4, 3],
-#          [7, 6, 5]]
-# Teacher
-BOARD = [[4, 2, 7],
-         [1, 6, 3],
-         [7, 8, 0]]
+BOARD = [[1, 8, 2],
+         [0, 4, 3],
+         [7, 6, 5]]
+# BOARD = [[4, 3, 0], #Alternative
+#          [7, 1, 2],
+#          [8, 6, 5]]
 FINAL_BOARD = [[1, 2, 3],
                [4, 5, 6],
                [7, 8, 0]]
@@ -16,9 +16,13 @@ visited = []
 children = []
 parent = [0 for _ in range(181440)]
 depth = 0
-# Find the open space in the puzzle
+
+print("START_BOARD:", BOARD)
+print("START_BOARD:", FINAL_BOARD)
+print('Searching...')
 
 
+# Check the path
 def extract_path():
     p = FINAL_BOARD
     path = []
@@ -30,6 +34,7 @@ def extract_path():
     return path
 
 
+# Find the open space in the puzzle
 def find_open_space(n):
     global open_space
     for i in range(len(n)):
@@ -39,6 +44,7 @@ def find_open_space(n):
                 break
 
 
+# Look for possible next steps
 def neighbors(n):
     res = []
     x = open_space[0]
@@ -58,11 +64,12 @@ def neighbors(n):
 def IDS(board, final_board, limit):
     found = False
     stack = [board]
+    # Iterate through depth limits
     for i in range(0, limit):
         if ids(stack, final_board, i):
-            print(f"Found on limit {depth}")
+            print(f"IDS / Depth of solution: {depth}")
             print("Path: ")
-            print(extract_path())
+            print(*extract_path(), sep='\n')
             found = True
             break
     if not found:
@@ -73,6 +80,7 @@ def ids(stack, final_board, limit):
     global visited, depth, children
     limit += 1
     while stack:
+        # Check if limit reached
         if depth <= limit:
             n = stack.pop()
             if n == final_board:
