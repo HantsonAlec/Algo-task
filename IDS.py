@@ -88,8 +88,10 @@ def ids(stack, final_board, limit):
                 stack.clear()
                 return True
             else:
+                # Add to visited and set children and parents
                 find_open_space(n)
                 visited.append(n)
+                # Check every valid neighbor
                 for node in neighbors(n):
                     if node not in visited:
                         visited.append(node)

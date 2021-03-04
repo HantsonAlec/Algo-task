@@ -85,14 +85,6 @@ def bs(board, final_board):
                         node)] = actions_fb[visited_fb.index(n)] + 1
                     parent_fb[visited_fb.index(node)] = n
                     queue_fb.append(node)
-                    # Check if done
-                    # if node == final_board:
-                    #     print("Done via fb")
-                    #     print(node)
-                    #     print(actions_fb[visited_fb.index(node)])
-                    #     queue_bf.clear()
-                    #     queue_fb.clear()
-                    #     break
         # Back to front
         if queue_bf:
             n = queue_bf.pop(0)
@@ -122,14 +114,6 @@ def bs(board, final_board):
                         queue_bf.clear()
                         queue_fb.clear()
                         break
-                    # Check if done
-                    # if node == board:
-                    #     print("Done via bf")
-                    #     print(node)
-                    #     print(actions_bf[visited_bf.index(node)])
-                    #     queue_bf.clear()
-                    #     queue_fb.clear()
-                    #     break
 
 
 bs(BOARD, FINAL_BOARD)
